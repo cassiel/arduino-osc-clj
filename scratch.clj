@@ -37,3 +37,5 @@
 
 (let [[_ host port] (re-find #"(\S+):(\d+)" "localhost:3000")]
   {:host host :port port})
+
+(cons "A" [])

@@ -3,6 +3,8 @@
   :url "https://github.com/cassiel/arduino-osc-clj"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :main eu.cassiel.arduino-osc.main
   :dependencies [[clodiuno "0.0.4-SNAPSHOT"]
                  [net.loadbang/net.loadbang.osc "1.6.0"]
+                 [org.clojure/tools.cli "0.2.4"]
                  [org.clojure/clojure "1.5.1"]])
