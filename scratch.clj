@@ -7,9 +7,7 @@
   (:use :reload-all clodiuno.core)
   (:use :reload-all clodiuno.firmata))
 
-;; cloduino bombs on `/dev/cu.*` forms.
-
-(def board (arduino :firmata "/dev/tty.usbmodemfa1451"))
+(def board (arduino :firmata "/dev/tty.usbmodemfa141"))
 
 (pin-mode board 13 OUTPUT)
 
@@ -30,11 +28,12 @@
 
 (vals m/IN-PINS)
 
-;; Example invocation:
-
-(def doit (o/go :serial "/dev/tty.usbmodemfa1451"
-                :host "localhost"
-                :port 3000
+(def doit (o/go :serial "/dev/tty.usbmodemfa141"
+                :destinations ["localhost:4002"
+                               "localhost:4001"]
                 :msec 100))
 
 (o/close doit)
+
+(let [[_ host port] (re-find #"(\S+):(\d+)" "localhost:3000")]
+  {:host host :port port})

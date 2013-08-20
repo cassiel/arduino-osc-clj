@@ -13,9 +13,13 @@
   (-> (Message. "/state")
       (.addInteger state)))
 
-(defn go [& {:keys [serial host port msec]}]
+(defn go [& {:keys [serial destinations msec]}]
   (let [board (c/arduino :firmata serial)
-        tx (UDPTransmitter. (InetAddress/getByName host) port)]
+        make-tx (fn [dest]
+                  (let
+                      [[_ host port] (re-find #"(\S+):(\d+)" dest)]
+                    (UDPTransmitter. (InetAddress/getByName host) (Integer/parseInt port))))
+        txs (map make-tx destinations)]
     (doseq [p (vals m/OUT-PINS)]
       (c/pin-mode board p c/OUTPUT))
 
@@ -29,11 +33,12 @@
                            (let [state' (c/digital-read board (:button m/IN-PINS))]
                              (when (not= state state')
                                (c/digital-write board (:led m/OUT-PINS) state')
-                               (.transmit tx (make-message state')))
+                               (doseq [tx txs]
+                                 (.transmit tx (make-message state'))))
                              (Thread/sleep msec)
                              (recur state')))))))
 
     (reify CLOSEABLE
       (close [this]
-        (.close tx)
+        (doseq [tx txs] (.close tx))
         (c/close board)))))
