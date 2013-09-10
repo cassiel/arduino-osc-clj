@@ -7,7 +7,7 @@
   (:use :reload-all clodiuno.core)
   (:use :reload-all clodiuno.firmata))
 
-(def board (arduino :firmata "/dev/tty.usbmodemfa141"))
+(def board (arduino :firmata "/dev/tty.usbmodemfd131"))
 
 (pin-mode board 13 OUTPUT)
 
